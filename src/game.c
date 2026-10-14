@@ -8,8 +8,8 @@
 
 static void render_moves(Window* win){
 
-	const size_t text_padding_x = 10;
-	const size_t text_padding_y = 50;
+	const size_t text_padding_x = 20;
+	const size_t text_padding_y = 25;
 	const size_t font_size = 32;
 	char moves[16];
 
@@ -90,6 +90,19 @@ static void draw_win_text(Window* win){
 	DrawText(reset_text, reset_text_pos_x, text_pos_y + font_size, 32, GREEN);
 }
 
+static void render_reset_text(Window* win){
+	
+	const char* text = "CTRL + R to start a new game";
+	const size_t font_size = 16;
+	const size_t text_width = MeasureText(text, font_size);
+	const size_t text_padding_x = 24;
+	
+	const int text_pos_y = win->height - font_size * 2;
+	const int text_pos_x = win->width - text_width - text_padding_x;
+	DrawText(text, text_pos_x, text_pos_y, font_size, GREEN);
+
+}
+
 void game(Window* win){
 
 	init_grid(win);
@@ -97,11 +110,11 @@ void game(Window* win){
 	while(!WindowShouldClose()){
 		BeginDrawing();
 		ClearBackground(BG_COLOR);
-		DrawFPS(10, 10);
 
 		poll_inputs(win);
 		render_grid(win);
 		render_moves(win);
+		render_reset_text(win);
 
 		if(game_over(win)){
 			win->has_won = true;

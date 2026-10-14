@@ -80,12 +80,11 @@ void init_grid(Window* win){
 		get_cell(&win->grid, 1, 4)->is_on = true;
 		get_cell(&win->grid, 2, 4)->is_on = true;
 	} else {
-
-	const int moves = 30;
-	for(int i = 0; i < moves; i++){
-		int row = rand() % GRID_HEIGHT;
-		int col = rand() % GRID_WIDTH;
-		toggle_cell(&win->grid, row, col);
+		const int moves = 30;
+		for(int i = 0; i < moves; i++){
+			int row = rand() % GRID_HEIGHT;
+			int col = rand() % GRID_WIDTH;
+			toggle_cell(&win->grid, row, col);
 		}
 	}
 }
