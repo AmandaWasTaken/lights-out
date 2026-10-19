@@ -120,9 +120,6 @@ void game(Window* win){
 
 		if(game_over(win)){
 			win->has_won = true;
-		}
-
-		if(win->has_won){
 			draw_win_text(win);
 		}
 

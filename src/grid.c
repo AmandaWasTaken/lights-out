@@ -42,7 +42,7 @@ void init_grid(Window* win){
 	win->grid.cells = malloc(sizeof(Cell) * win->grid_w * win->grid_h);
 
 	if(win->grid.cells == NULL){
-		fprintf(stderr, "%s(): grid.cells is null\n");
+		fprintf(stderr, "%s(): grid.cells is null\n", __func__);
 		exit(1);
 	}
 
@@ -90,7 +90,7 @@ void init_grid(Window* win){
 	}
 }
 
-inline void render_grid(const Window* win){
+void render_grid(const Window* win){
 
 	Color center;
 	Color border_color = BG_COLOR;
