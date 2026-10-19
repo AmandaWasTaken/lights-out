@@ -6,5 +6,5 @@
 
 
 void game(Window* win);
-void toggle_cell(Grid* grid, int row, int col);
+void toggle_cell(Grid* grid, int row, int col, int w, int h);
 #endif

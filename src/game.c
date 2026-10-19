@@ -21,7 +21,7 @@ static void crouch(Window* win){
 
 	const int crouch_height = win->cell_h / 2;
 
-	for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+	for (int i = 0; i < win->grid_w * win->grid_h; i++) {
     	Cell* cell = &win->grid.cells[i];
 
     	if (IsKeyDown(KEY_LEFT_SHIFT)) {
@@ -60,7 +60,8 @@ static void poll_inputs(Window* win){
 
 			size_t idx = i * win->grid_w + j;
 			if(CheckCollisionPointRec(mouse_pos, win->grid.cells[idx].rect)){
-				toggle_cell(&(win->grid), i, j);
+				toggle_cell(&(win->grid), i, j, 
+						win->grid_w, win->grid_h);
 				win->moves++;
 				return;
 			}
@@ -106,6 +107,7 @@ static void render_reset_text(Window* win){
 void game(Window* win){
 
 	init_grid(win);
+	printf("W: %i H: %i\n", win->grid_w, win->grid_h);
 
 	while(!WindowShouldClose()){
 		BeginDrawing();
@@ -118,9 +120,6 @@ void game(Window* win){
 
 		if(game_over(win)){
 			win->has_won = true;
-		}
-
-		if(win->has_won){
 			draw_win_text(win);
 		}
 
