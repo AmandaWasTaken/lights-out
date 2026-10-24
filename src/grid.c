@@ -96,6 +96,7 @@ void render_grid(const Window* win){
 	Color border_color = BG_COLOR;
 	// haha 67
 	border_color.b += 67;
+	border_color.r += 80;
 
 	for(int row = 0; row < win->grid_h; row++){
 		for(int col = 0; col < win->grid_w; col++){
@@ -105,10 +106,15 @@ void render_grid(const Window* win){
 
 			Vector2 pos  = (Vector2) {.x = cell->rect.x, .y = cell->rect.y };
 			Vector2 size = (Vector2) {.x = cell->rect.width, .y = cell->rect.height};
-			center = (Color) (cell->is_on ? WHITE : BLACK);
 
-			DrawRectangleV(pos, size, center);
-			DrawRectangleLinesEx(cell->rect, 2.5f, border_color);
+			if(cell->is_on){
+				DrawRectangleGradientH(pos.x, pos.y, size.x, size.y,
+						GRADIENT_TOP_ON, GRADIENT_BOT_ON);
+			} else {	
+				DrawRectangleGradientH(pos.x, pos.y, size.x, size.y,
+						GRADIENT_TOP_OFF, GRADIENT_BOT_OFF);
+			}
+			DrawRectangleLinesEx(cell->rect, 3.5f, border_color);
 		}
 	} 
 }

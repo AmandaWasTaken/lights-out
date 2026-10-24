@@ -24,13 +24,15 @@ int main(int argc, char** argv){
 	char* end;
 	int w = (int) strtol(argv[1], &end, 10);
 	if(*end != '\0'){
-		fprintf(stderr, "Conversion failed\n");
+		fprintf(stderr, "Conversion failed (w)\n");
+		exit(1);
 	}
 
 	end = NULL;
 	int h = (int) strtol(argv[2], &end, 10);
 	if(*end != '\0'){
-		fprintf(stderr, "Conversion failed\n");
+		fprintf(stderr, "Conversion failed (h)\n");
+		exit(1);
 	}
 
 	// TODO
