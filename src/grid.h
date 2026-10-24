@@ -4,9 +4,11 @@
 #include <stdbool.h>
 #include "cell.h"
 
-#define GRID_WIDTH 5
-#define GRID_HEIGHT 5
 #define GRID_PADDING 2
+#define MAX_WIDTH    8
+#define MAX_HEIGHT   8
+#define MIN_WIDTH    3
+#define MIN_HEIGHT	 3
 
 typedef struct {
 	Cell* cells; 

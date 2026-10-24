@@ -1,63 +1,63 @@
 #include <raylib.h>
 #include <stdio.h>
-#include <cutils.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "grid.h"
 #include "window.h"
 #include "colors.h"
 
-void toggle_cell(Grid* grid, int row, int col){
+void toggle_cell(Grid* grid, int row, int col, int w, int h){
 	
-	int idx = row * GRID_WIDTH + col;
+	int idx = row * w + col;
 	grid->cells[idx].is_on ^= true;
 
 	if (row > 0) {
-        idx = (row - 1) * GRID_WIDTH + col;
+        idx = (row - 1) * w + col;
         grid->cells[idx].is_on ^= true;
     }
 
-    if (row < GRID_HEIGHT - 1) {
-        idx = (row + 1) * GRID_WIDTH + col;
+    if (row < h - 1) {
+        idx = (row + 1) * w + col;
         grid->cells[idx].is_on ^= true;
     }
 
     if (col > 0) {
-        idx = row * GRID_WIDTH + (col - 1);
+        idx = row * w + (col - 1);
         grid->cells[idx].is_on ^= true;
     }
 
-    if (col < GRID_WIDTH - 1) {
-        idx = row * GRID_WIDTH + (col + 1);
+    if (col < w - 1) {
+        idx = row * w + (col + 1);
         grid->cells[idx].is_on ^= true; 
     }
 }
 
-static Cell* get_cell(Grid* grid, int x, int y){
-	return &grid->cells[x * GRID_WIDTH + y];
+static Cell* get_cell(Grid* grid, int x, int y, int w){
+	return &grid->cells[x * w + y];
 }
 
 void init_grid(Window* win){
 
 	win->moves = 0;
-	win->grid.cells = malloc(sizeof(Cell) * GRID_WIDTH * GRID_HEIGHT);
+	win->grid.cells = malloc(sizeof(Cell) * win->grid_w * win->grid_h);
 
 	if(win->grid.cells == NULL){
-		fprintf(stderr, "%s(): grid.cells is null\n");
+		fprintf(stderr, "%s(): grid.cells is null\n", __func__);
 		exit(1);
 	}
 
 	bool debug = false;
 
-	int grid_width  = GRID_WIDTH * CELL_WIDTH + (GRID_WIDTH - 1) * GRID_PADDING;
-	int grid_height = GRID_HEIGHT * CELL_HEIGHT + (GRID_HEIGHT - 1) * GRID_PADDING;
+	int grid_width  = win->grid_w * CELL_WIDTH + (win->grid_w - 1) * GRID_PADDING;
+	int grid_height = win->grid_h * CELL_HEIGHT + (win->grid_h - 1) * GRID_PADDING;
 
 	int start_x = (win->width - grid_width) / 2;
 	int start_y = (win->height - grid_height) / 2;
 
-	for(int row = 0; row < GRID_HEIGHT; row++){
-		for(int col = 0; col < GRID_WIDTH; col++){
+	for(int row = 0; row < win->grid_h; row++){
+		for(int col = 0; col < win->grid_w; col++){
 	
-			int idx = row * GRID_WIDTH + col;
+			int idx = row * win->grid_w + col;
 			int x = start_x + col * (CELL_WIDTH + GRID_PADDING);
 			int y = start_y + row * (CELL_HEIGHT + GRID_PADDING);
 
@@ -75,16 +75,17 @@ void init_grid(Window* win){
 	}
 
 	if(debug){ // free win board
-		get_cell(&win->grid, 0, 4)->is_on = true;
-		get_cell(&win->grid, 1, 3)->is_on = true;
-		get_cell(&win->grid, 1, 4)->is_on = true;
-		get_cell(&win->grid, 2, 4)->is_on = true;
+		get_cell(&win->grid, 0, 4, win->grid_w)->is_on = true;
+		get_cell(&win->grid, 1, 3, win->grid_w)->is_on = true;
+		get_cell(&win->grid, 1, 4, win->grid_w)->is_on = true;
+		get_cell(&win->grid, 2, 4, win->grid_w)->is_on = true;
 	} else {
 		const int moves = 30;
 		for(int i = 0; i < moves; i++){
-			int row = rand() % GRID_HEIGHT;
-			int col = rand() % GRID_WIDTH;
-			toggle_cell(&win->grid, row, col);
+			int row = rand() % win->grid_h;
+			int col = rand() % win->grid_w;
+			toggle_cell(&win->grid, row, col, 
+					win->grid_w, win->grid_h);
 		}
 	}
 }
@@ -95,6 +96,7 @@ void render_grid(const Window* win){
 	Color border_color = BG_COLOR;
 	// haha 67
 	border_color.b += 67;
+	border_color.r += 80;
 
 	for(int row = 0; row < win->grid_h; row++){
 		for(int col = 0; col < win->grid_w; col++){
@@ -104,10 +106,15 @@ void render_grid(const Window* win){
 
 			Vector2 pos  = (Vector2) {.x = cell->rect.x, .y = cell->rect.y };
 			Vector2 size = (Vector2) {.x = cell->rect.width, .y = cell->rect.height};
-			center = (Color) (cell->is_on ? WHITE : BLACK);
 
-			DrawRectangleV(pos, size, center);
-			DrawRectangleLinesEx(cell->rect, 2.5f, border_color);
+			if(cell->is_on){
+				DrawRectangleGradientH(pos.x, pos.y, size.x, size.y,
+						GRADIENT_TOP_ON, GRADIENT_BOT_ON);
+			} else {	
+				DrawRectangleGradientH(pos.x, pos.y, size.x, size.y,
+						GRADIENT_TOP_OFF, GRADIENT_BOT_OFF);
+			}
+			DrawRectangleLinesEx(cell->rect, 3.5f, border_color);
 		}
 	} 
 }
