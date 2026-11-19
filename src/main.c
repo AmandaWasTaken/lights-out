@@ -35,14 +35,6 @@ int main(int argc, char** argv){
 		exit(1);
 	}
 
-	// TODO
-	/*
-	if(w != h){
-		fprintf(stderr, "Only NxN grid allowed for now\n");
-		exit(1);
-	}
-	*/
-
 	if(w > MAX_WIDTH || h > MAX_HEIGHT){
 		fprintf(stderr, "Maximum grid size %ix%i\n", 
 				MAX_WIDTH, MAX_HEIGHT);
