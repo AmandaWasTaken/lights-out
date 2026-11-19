@@ -36,10 +36,12 @@ int main(int argc, char** argv){
 	}
 
 	// TODO
+	/*
 	if(w != h){
 		fprintf(stderr, "Only NxN grid allowed for now\n");
 		exit(1);
 	}
+	*/
 
 	if(w > MAX_WIDTH || h > MAX_HEIGHT){
 		fprintf(stderr, "Maximum grid size %ix%i\n", 
@@ -65,8 +67,8 @@ int main(int argc, char** argv){
 	};
 
 	if(win.grid_w > 5 || win.grid_h > 5){
-		win.width += 300;
-		win.height += 300;
+		win.width += 350;
+		win.height += 350;
 	}
 
 	InitWindow(win.width, win.height, win.title);
