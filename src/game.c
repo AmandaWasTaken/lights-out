@@ -54,18 +54,21 @@ static void poll_inputs(Window* win){
 	if(!IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || win->has_won) return;
 
 	Vector2 mouse_pos = GetMousePosition();
-
-	for(size_t i = 0; i < win->grid_w; i++){
-		for(size_t j = 0; j < win->grid_h; j++){
-
-			size_t idx = i * win->grid_w + j;
-			if(CheckCollisionPointRec(mouse_pos, win->grid.cells[idx].rect)){
-				toggle_cell(&(win->grid), i, j, 
-						win->grid_w, win->grid_h);
-				win->moves++;
-				return;
-			}
-		}
+	for(size_t row = 0; row < win->grid_h; row++){
+	    for(size_t col = 0; col < win->grid_w; col++){
+	
+	        size_t idx = row * win->grid_w + col;
+	
+	        if(CheckCollisionPointRec(mouse_pos,
+	                    win->grid.cells[idx].rect)){
+		
+				toggle_cell(&(win->grid), row, col,
+            		win->grid_w, win->grid_h);
+	
+	            win->moves++;
+	            return;
+	        }
+	    }
 	}
 }
 
@@ -91,23 +94,26 @@ static void draw_win_text(Window* win){
 	DrawText(reset_text, reset_text_pos_x, text_pos_y + font_size, 32, GREEN);
 }
 
-static void render_reset_text(Window* win){
+static void render_reset_text(Window* win, Font font){
 	
 	const char* text = "CTRL + R to start a new game";
-	const size_t font_size = 16;
+	const float font_size = 50.0f;
 	const size_t text_width = MeasureText(text, font_size);
-	const size_t text_padding_x = 24;
+	const float text_padding_x = 67.0f; // haha 67
+	const float text_padding_y = 35.0f;
 	
-	const int text_pos_y = win->height - font_size * 2;
-	const int text_pos_x = win->width - text_width - text_padding_x;
-	DrawText(text, text_pos_x, text_pos_y, font_size, GREEN);
+	const int text_pos_y = win->height - font_size * 2 + text_padding_y;
+	const int text_pos_x = win->width - text_width + text_padding_x;
+	const Vector2 pos = (Vector2) {
+		.x = text_pos_x, .y = text_pos_y, };
+	DrawTextEx(font, text, pos, font_size, 1.5f, GREEN);
 
 }
 
 void game(Window* win){
 
 	init_grid(win);
-	printf("W: %i H: %i\n", win->grid_w, win->grid_h);
+	const Font font = LoadFont("assets/JetBrainsMono-Light.ttf");
 
 	while(!WindowShouldClose()){
 		BeginDrawing();
@@ -116,7 +122,7 @@ void game(Window* win){
 		poll_inputs(win);
 		render_grid(win);
 		render_moves(win);
-		render_reset_text(win);
+		render_reset_text(win, font);
 
 		if(game_over(win)){
 			win->has_won = true;
