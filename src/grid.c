@@ -9,9 +9,9 @@
 void toggle_cell(Grid* grid, int row, int col, int w, int h){
 	
 	int idx = row * w + col;
-	grid->cells[idx].is_on ^= true;
+    grid->cells[idx].is_on ^= true;
 
-	if (row > 0) {
+    if (row > 0) {
         idx = (row - 1) * w + col;
         grid->cells[idx].is_on ^= true;
     }
@@ -28,7 +28,7 @@ void toggle_cell(Grid* grid, int row, int col, int w, int h){
 
     if (col < w - 1) {
         idx = row * w + (col + 1);
-        grid->cells[idx].is_on ^= true; 
+        grid->cells[idx].is_on ^= true;
     }
 }
 
@@ -74,7 +74,7 @@ void init_grid(Window* win){
 		}
 	}
 
-	if(debug){ // free win board
+	if(debug){ // free win board for testing, expects 3x3
 		get_cell(&win->grid, 0, 4, win->grid_w)->is_on = true;
 		get_cell(&win->grid, 1, 3, win->grid_w)->is_on = true;
 		get_cell(&win->grid, 1, 4, win->grid_w)->is_on = true;
@@ -114,6 +114,7 @@ void render_grid(const Window* win){
 				DrawRectangleGradientH(pos.x, pos.y, size.x, size.y,
 						GRADIENT_TOP_OFF, GRADIENT_BOT_OFF);
 			}
+
 			DrawRectangleLinesEx(cell->rect, 3.5f, border_color);
 		}
 	} 
